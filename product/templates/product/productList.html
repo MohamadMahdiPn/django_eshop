@@ -12,4 +12,8 @@ product list
       <li><a href="{{ product.get_absolute_url }}" style="color: black; text-decoration: none;">{{ product.title }} / price {{ product.price }}</a></li>
     {% endfor %}
     </ul>
+    <hr/>
+    <p>number of products {{ totalNumberOfProducts }}</p>
+    <p>average raitngs {{ averageRatings.rating__avg }}</p>
+    <p>average Low Price {{ averageRatings.price__min }}</p>
 {% endblock %}
