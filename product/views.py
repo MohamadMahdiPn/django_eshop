@@ -14,12 +14,12 @@ def productList(request):
 
     products = prModel.objects.all().order_by('-price')
     numberOfProducts = products.count()
-    averageRatings = products.aggregate(Avg("rating"), Min("price"))
+    # averageRatings = products.aggregate(Avg("rating"), Min("price"))
 
     return render(request, 'product/productList.html', {
         'products': products,
         'totalNumberOfProducts': numberOfProducts,
-        'averageRatings': averageRatings
+        # 'averageRatings': averageRatings
 
     })
 

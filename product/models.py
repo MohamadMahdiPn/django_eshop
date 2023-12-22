@@ -6,31 +6,46 @@ from django.utils.text import slugify
 
 # Create your models here.
 
+
 class ProductCategory(models.Model):
-    title = models.CharField(max_length=300, verbose_name='عنوان')
-    url_title = models.CharField(max_length=300, verbose_name='عنوان در url')
-    is_delete = models.BooleanField(default=False)
+    title = models.CharField(max_length=300,db_index=True, verbose_name='عنوان')
+    url_title = models.CharField(max_length=300,db_index=True, verbose_name='عنوان در url')
+    is_delete = models.BooleanField(default=False, verbose_name='حذف شده / نشده')
+    is_Active = models.BooleanField(default=False, verbose_name='فعال /غیر فعال')
 
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = 'دسته بندی'
+        verbose_name_plural = 'دسته بندی ها'
 
-class ProductInformation(models.Model):
-    color = models.CharField(max_length=200 , verbose_name='color')
-    size = models.CharField(max_length=200 , verbose_name='size')
 
-    def __str__(self):
-        return f"({self.color} - {self.size})"
+# class ProductInformation(models.Model):
+#    color = models.CharField(max_length=200, verbose_name='color')
+#    size = models.CharField(max_length=200, verbose_name='size')
+
+#    def __str__(self):
+#        return f"({self.color} - {self.size})"
+
+#    class Meta:
+#        verbose_name = 'اطلاعات کالا'
+#        verbose_name_plural = 'اطلاعات کالا ها'
+
 
 class Product(models.Model):
     title = models.CharField(max_length=300)
-    price = models.IntegerField()
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
+    price = models.IntegerField(verbose_name='قیمت')
+    # rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
     shortDescription = models.CharField(max_length=360, null=True)
+    description = models.TextField(verbose_name='توصیحات اصلی')
     isActive = models.BooleanField(default=False)
     slug = models.SlugField(default="", null=False, db_index=True, blank=True)
-    Category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE , null= True,related_name='Categoties')
-    product_information = models.OneToOneField(ProductInformation, on_delete=models.CASCADE, related_name='Product_info', verbose_name='additional Info', null=True)
+    Category = models.ManyToManyField(ProductCategory, related_name='Categoties', verbose_name='دسته بندی ها')
+    # product_information = models.OneToOneField(ProductInformation, on_delete=models.CASCADE,
+    #                                           related_name='Product_info', verbose_name='additional Info', null=True)
+
+    # product_tags = models.ManyToManyField(ProductTag, verbose_name='tags')
 
     def __str__(self):
         return f"{self.title} ({self.price})"
@@ -42,3 +57,18 @@ class Product(models.Model):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = 'کالا'
+        verbose_name_plural = 'کالا ها'
+
+
+class ProductTag(models.Model):
+    caption = models.CharField(max_length=300,db_index=True, verbose_name='عنوان')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ProductTags')
+
+    class Meta:
+        verbose_name = 'تگ محصول'
+        verbose_name_plural = 'تگ ها'
+
+    def __str__(self):
+        return self.tag
