@@ -12,7 +12,7 @@ def productList(request):
     # ps_4 = prModel(title='Play station 4', price=16000000 , rating=4 , isActive=True , Category=console ,
     # shortDescription='PS 4') ps_4.save()
 
-    products = prModel.objects.all().order_by('-price')
+    products = prModel.objects.all().order_by('price')
     numberOfProducts = products.count()
     # averageRatings = products.aggregate(Avg("rating"), Min("price"))
 

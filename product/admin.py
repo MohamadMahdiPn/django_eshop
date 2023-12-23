@@ -14,7 +14,7 @@ class ProductTagAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_filter = ['title', 'Category', 'isActive']
     list_display = ['title', 'price', 'isActive','slug']
-    list_editable = [ 'price', 'isActive']
+    list_editable = ['price', 'isActive']
 
 
 admin.site.register(models.Product, ProductAdmin)

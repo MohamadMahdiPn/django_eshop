@@ -48,7 +48,9 @@ class Product(models.Model):
     # product_tags = models.ManyToManyField(ProductTag, verbose_name='tags')
 
     def __str__(self):
-        return f"{self.title} ({self.price})"
+        formatted_price = "{:,}".format(self.price)
+        return f"{self.title}, ({formatted_price})"
+        # return f"{self.title},({self.price})"
 
     def get_absolute_url(self):
         return reverse('productDetail', args=[self.slug])
