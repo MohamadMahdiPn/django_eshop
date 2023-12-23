@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'templates.shared.urls'
+ROOT_URLCONF = 'django_eshop.urls'
 
 TEMPLATES = [
     {
