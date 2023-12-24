@@ -32,6 +32,17 @@ class ProductCategory(models.Model):
 #        verbose_name = 'اطلاعات کالا'
 #        verbose_name_plural = 'اطلاعات کالا ها'
 
+class ProductBrand(models.Model):
+    title = models.CharField(max_length=300 , verbose_name='نام برند' , db_index=True )
+    isActive = models.BooleanField(default=False, verbose_name='فعال /غیر فعال')
+
+    class Meta:
+        verbose_name = 'برند'
+        verbose_name_plural = 'برند ها'
+
+    def __str__(self):
+        return self.title
+
 
 class Product(models.Model):
     title = models.CharField(max_length=300)
@@ -39,9 +50,11 @@ class Product(models.Model):
     # rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
     shortDescription = models.CharField(max_length=360, null=True)
     description = models.TextField(verbose_name='توصیحات اصلی')
-    isActive = models.BooleanField(default=False)
+    isActive =  models.BooleanField(default=False, verbose_name='فعال /غیر فعال')
     slug = models.SlugField(default="", null=False, db_index=True, blank=True)
     Category = models.ManyToManyField(ProductCategory, related_name='Categoties', verbose_name='دسته بندی ها')
+    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE , verbose_name= 'برند', null=True , blank=True)
+
     # product_information = models.OneToOneField(ProductInformation, on_delete=models.CASCADE,
     #                                           related_name='Product_info', verbose_name='additional Info', null=True)
 
@@ -74,3 +87,5 @@ class ProductTag(models.Model):
 
     def __str__(self):
         return self.tag
+
+
