@@ -8,8 +8,8 @@ from django.utils.text import slugify
 
 
 class ProductCategory(models.Model):
-    title = models.CharField(max_length=300,db_index=True, verbose_name='عنوان')
-    url_title = models.CharField(max_length=300,db_index=True, verbose_name='عنوان در url')
+    title = models.CharField(max_length=300, db_index=True, verbose_name='عنوان')
+    url_title = models.CharField(max_length=300, db_index=True, verbose_name='عنوان در url')
     is_delete = models.BooleanField(default=False, verbose_name='حذف شده / نشده')
     is_Active = models.BooleanField(default=False, verbose_name='فعال /غیر فعال')
 
