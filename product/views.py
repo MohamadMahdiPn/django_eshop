@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import TemplateView
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from .models import Product as prModel
 from .models import ProductCategory as prCategory
@@ -26,16 +26,17 @@ class ProductListView(ListView):
         data = baseQuery.filter(isActive=True)
         return data
 
-class ProductDetailsView(TemplateView):
+
+class ProductDetailsView(DetailView):
     template_name = 'product/ProductDetail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        slug = kwargs['slug']
-        productItem = get_object_or_404(prModel, slug=slug)
-        context['product'] = productItem
-
-        return context
+    model = prModel
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     slug = kwargs['slug']
+    #     productItem = get_object_or_404(prModel, slug=slug)
+    #     context['product'] = productItem
+    #
+    #     return context
 
 
 # def productList(request):

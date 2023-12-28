@@ -15,25 +15,25 @@
                         <form id="main-contact-form" class="contact-form row" action="{% url 'contact_us_page' %}" method="post">
                            {% csrf_token %}
                                 <div class='form-group col-md-6'>
-                                    {{ contact_form.fullName.label_tag }}
-                                    {{ contact_form.fullName }}
-                                    {{ contact_form.fullName.errors }}
+                                    {{ form.fullName.label_tag }}
+                                    {{ form.fullName }}
+                                    {{ form.fullName.errors }}
                                 </div>
 
                                 <div class='form-group col-md-6'>
-                                    {{ contact_form.email.label_tag }}
-                                    {{ contact_form.email }}
-                                    {{ contact_form.email.errors }}
+                                    {{ form.email.label_tag }}
+                                    {{ form.email }}
+                                    {{ form.email.errors }}
                                 </div>
                                 <div class='form-group col-md-12'>
-                                    {{ contact_form.title.label_tag }}
-                                    {{ contact_form.title }}
-                                    {{ contact_form.title.errors }}
+                                    {{ form.title.label_tag }}
+                                    {{ form.title }}
+                                    {{ form.title.errors }}
                                 </div>
                                 <div class='form-group col-md-12'>
-                                    {{ contact_form.message.label_tag }}
-                                    {{ contact_form.message }}
-                                    {{ contact_form.message.errors }}
+                                    {{ form.message.label_tag }}
+                                    {{ form.message }}
+                                    {{ form.message.errors }}
                                 </div>
                                 {% comment %}{{ contact_form }}{% endcomment %}
 {#                            <div class="form-group col-md-6">#}
