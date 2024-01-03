@@ -38,3 +38,6 @@ class ContactUserModelForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "موضوع"})
 
         }
+
+class ProfileForm(forms.Form):
+    user_image = forms.FileField(required=False)

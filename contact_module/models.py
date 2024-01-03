@@ -2,6 +2,10 @@ from django.db import models
 
 
 # Create your models here.
+class UserProfile(models.Model):
+    image = models.FileField(upload_to='images')
+
+
 class contactUser(models.Model):
     title = models.CharField(max_length=300, verbose_name='عنوان')
     email = models.EmailField(max_length=300, verbose_name='ایمیل')
@@ -18,3 +22,5 @@ class contactUser(models.Model):
 
     def __str__(self):
         return f'{self.title} ({self.fullName})'
+
+
