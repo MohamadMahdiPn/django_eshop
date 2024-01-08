@@ -1,5 +1,5 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic.base import TemplateView
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic.base import TemplateView, View
 from django.views.generic import ListView, DetailView
 
 from .models import Product as prModel
@@ -20,6 +20,8 @@ class ProductListView(ListView):
     #     return context
     model = prModel
     context_object_name = 'products'
+    ordering = ['-price']
+    paginate_by = 1
 
     def get_queryset(self):
         baseQuery = super().get_queryset()
@@ -30,12 +32,21 @@ class ProductListView(ListView):
 class ProductDetailsView(DetailView):
     template_name = 'product/ProductDetail.html'
     model = prModel
+
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     slug = kwargs['slug']
     #     productItem = get_object_or_404(prModel, slug=slug)
     #     context['product'] = productItem
     #
+    #     return context
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     loaded_data = self.object
+    #     request = self.request
+    #     favorite_product_id = request.session['productID']
+    #     context['isFavorite'] = favorite_product_id == str(loaded_data.id)
     #     return context
 
 
@@ -61,3 +72,11 @@ def productDetail(request, slug):
     return render(request, 'product/ProductDetail.html', {
         'product': productItem
     })
+
+
+class AddProductFavorite(View):
+    def post(self, request):
+        product_id = request.POST['productID']
+        product = prModel.objects.get(id=product_id)
+        request.session['productID'] = product_id
+        return redirect(product.get_absolute_url())

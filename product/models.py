@@ -45,12 +45,13 @@ class ProductBrand(models.Model):
 
 
 class Product(models.Model):
+    image = models.ImageField(upload_to='product', null=True, blank=True, verbose_name='عکس')
     title = models.CharField(max_length=300)
     price = models.IntegerField(verbose_name='قیمت')
     # rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], default=0)
     shortDescription = models.CharField(max_length=360, null=True)
     description = models.TextField(verbose_name='توصیحات اصلی')
-    isActive =  models.BooleanField(default=False, verbose_name='فعال /غیر فعال')
+    isActive = models.BooleanField(default=False, verbose_name='فعال /غیر فعال')
     slug = models.SlugField(default="", null=False, db_index=True, blank=True)
     Category = models.ManyToManyField(ProductCategory, related_name='Categoties', verbose_name='دسته بندی ها')
     brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE , verbose_name= 'برند', null=True , blank=True)

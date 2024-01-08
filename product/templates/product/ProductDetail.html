@@ -8,12 +8,22 @@
     <section>
         <div class="container">
             <div class="row">
+                {% if isFavorite %}
+	                <div class="col-md-12">
+                        <p class="text text-danger">محصول مورد علاقه شما</p>
+                    </div>
+                {% endif %}
 
                 <div class="col-sm-9 padding-right">
                     <div class="product-details"><!--product-details-->
                         <div class="col-sm-5">
                             <div class="view-product">
-                                <img src="/static/images/product-details/1.jpg" alt="">
+                                {% if product.image %}
+                                      <img src="{{ product.image.url }}" alt="">
+                                {% else %}
+                                    <img src="/static/images/product-details/1.jpg" alt="">
+                                {% endif %}
+
                                 <h3>بزرگنمایـی</h3>
                             </div>
                             <div id="similar-product" class="carousel slide" data-ride="carousel">
@@ -60,12 +70,15 @@
 										<span>قیمت : {{ product.price }} ريال</span>
 									</span>
                                     <span>
-										<label>تعداد :</label>
-										<input type="text" value="3" class="search_box">
-										<button type="button" class="btn btn-fefault cart">
-											<i class="fa fa-shopping-cart"></i>
-											افـزودن به سبـد خریـد+
-										</button>
+										<form action="{% url 'productFavorite' %}" method="post">
+                                            {% csrf_token %}
+                                            <label>تعداد :</label>
+										    <input name="productID" type="hidden" value="{{ product.id }}" >
+										    <button type="submit" class="btn btn-fefault cart">
+											    <i class="fa fa-shopping-cart"></i>
+											افـزودن به سبـد خریـد+  
+										    </button>
+                                        </form>
 									</span>
                                 </div>
                                 <div>
