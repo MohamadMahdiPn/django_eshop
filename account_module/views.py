@@ -107,26 +107,26 @@ class ForgotPasswordView(View):
                 # send reset pass in email
                 pass
 
-
         return render(request, 'account_module/ForgotPassword.html', {
             'forget_pass_form': forget_pass_form
         })
 
 
 class ResetPasswordView(View):
-    def get(self, request: HttpRequest, activeCode):
-        user: User = User.objects.filter(email_active_code__iexact=activeCode).first()
+    def get(self, request: HttpRequest, active_code):
+        user: User = User.objects.filter(email_active_code__iexact=active_code).first()
         if user is None:
             redirect(reverse('login_page'))
 
         resetPasswordForm = ResetPasswordForm()
-        return render(request, 'account_module/ResetPassword.html', {
+        context = {
             'reset_pass_form': resetPasswordForm
-        })
+        }
+        return render(request, 'account_module/ResetPassword.html', context)
 
-    def post(self, request: HttpRequest):
-        resetPasswordForm = ResetPasswordForm()
-        return render(request, 'account_module/ResetPassword.html', {
-            'reset_pass_form': resetPasswordForm
-        })
+    # def post(self, request: HttpRequest):
+    #     resetPasswordForm = ResetPasswordForm()
+    #     return render(request, 'account_module/ResetPassword.html', {
+    #         'reset_pass_form': resetPasswordForm
+    #     })
 
