@@ -8,12 +8,20 @@ from django.views.generic import ListView
 # from django.views.generic import
 from contact_module.forms import ContactForm, ContactUserModelForm, ProfileForm
 from contact_module.models import contactUser, UserProfile
+from site_module.models import SiteSetting
 
 
 class ContactView(FormView):
+
     template_name = 'contact_module/contact_us_page.html'
     form_class = ContactUserModelForm
     success_url = '/'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        setting = SiteSetting.objects.filter(is_main_setting=True).first()
+        context['site_setting'] = setting
+        return context
 
     def form_valid(self, form):
         form.save()

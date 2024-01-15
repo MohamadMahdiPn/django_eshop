@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic.base import TemplateView
 
+from site_module.models import SiteSetting
+
 
 # Create your views here.
 
@@ -17,8 +19,15 @@ class HomeView(TemplateView):
 
 
 def site_header_partial(request):
-    return render(request, 'shared/siteHeaderPartial.html', {})
+    setting = SiteSetting.objects.filter(is_main_setting=True).first()
+
+    return render(request, 'shared/siteHeaderPartial.html', {
+        'site_setting': setting
+    })
 
 
 def site_footer_partial(request):
-    return render(request, 'shared/siteFooterPartial.html', {})
+    setting = SiteSetting.objects.filter(is_main_setting=True).first()
+    return render(request, 'shared/siteFooterPartial.html', {
+        'site_setting': setting
+    })
