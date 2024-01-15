@@ -9,7 +9,7 @@ from django.utils.crypto import get_random_string
 from account_module.forms import RegistrationForm, LoginForm, ForgetPasswordForm, ResetPasswordForm
 from django.http import Http404, HttpRequest
 from django.contrib.auth import login, authenticate, logout
-
+from Utils.EmailService import sendEmail
 # Create your views here.
 
 
@@ -66,7 +66,7 @@ class RegisterView(View):
                                 username=user_email)
                 new_user.set_password(user_password)
                 new_user.save()
-                # todo: send email
+                sendEmail("Account Created",new_user.email,{'username': new_user.username}, 'emails/activate_account.html')
                 return redirect(reverse('login_page'))
         context = {
             'register_form': register_form
@@ -120,13 +120,31 @@ class ResetPasswordView(View):
 
         resetPasswordForm = ResetPasswordForm()
         context = {
-            'reset_pass_form': resetPasswordForm
+            'reset_pass_form': resetPasswordForm,
+            'User_active_code': user.email_active_code
         }
         return render(request, 'account_module/ResetPassword.html', context)
 
-    # def post(self, request: HttpRequest):
-    #     resetPasswordForm = ResetPasswordForm()
-    #     return render(request, 'account_module/ResetPassword.html', {
-    #         'reset_pass_form': resetPasswordForm
-    #     })
+    def post(self, request: HttpRequest, active_code):
+        resetPasswordForm = ResetPasswordForm(request.POST)
+        user: User = User.objects.filter(email_active_code__iexact=active_code).first()
+        if resetPasswordForm.is_valid():
 
+            if user is None:
+                return redirect(reverse('login_page'))
+            newUserPassword = resetPasswordForm.cleaned_data.get('password')
+            user.set_password(newUserPassword)
+            user.email_active_code = get_random_string(48)
+            user.is_active = True
+            user.save()
+            return redirect(reverse('login_page'))
+
+        return render(request, 'account_module/ResetPassword.html', {
+            'reset_pass_form': resetPasswordForm,
+            'User_active_code': user.email_active_code
+        })
+
+class LogoutView(View):
+    def get(self, request: HttpRequest):
+        logout(request)
+        return redirect(reverse('login_page'))
