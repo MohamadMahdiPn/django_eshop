@@ -21,7 +21,7 @@ class ProductListView(ListView):
     model = prModel
     context_object_name = 'products'
     ordering = ['-price']
-    paginate_by = 1
+    paginate_by = 5
 
     def get_queryset(self):
         baseQuery = super().get_queryset()
