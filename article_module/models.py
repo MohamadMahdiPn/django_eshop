@@ -1,5 +1,5 @@
 from django.db import models
-
+from account_module.models import User
 # Create your models here.
 
 
@@ -17,6 +17,8 @@ class ArticleCategory(models.Model):
         return self.title
 
 
+
+
 class Article(models.Model):
     title = models.CharField(max_length=100, verbose_name="عنوان")
     slug = models.SlugField(max_length=400, unique=True, db_index=True, verbose_name="عنوان در url", allow_unicode=True)
@@ -26,10 +28,12 @@ class Article(models.Model):
     text = models.TextField(verbose_name="متن اصلی")
     is_active = models.BooleanField(default=True, verbose_name="فعال")
     selected_categories = models.ManyToManyField(ArticleCategory, verbose_name="دسته بندی ها")
+    author = models.ForeignKey(User, verbose_name="نویسنده", on_delete=models.CASCADE, null=True, editable=False)
 
     class Meta:
         verbose_name = "مقاله"
         verbose_name_plural = "مقالات"
+
     def __str__(self):
         return self.title
 
