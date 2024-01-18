@@ -1,5 +1,6 @@
 from django.db import models
 from account_module.models import User
+from jalali_date import datetime2jalali, date2jalali
 # Create your models here.
 
 
@@ -17,8 +18,6 @@ class ArticleCategory(models.Model):
         return self.title
 
 
-
-
 class Article(models.Model):
     title = models.CharField(max_length=100, verbose_name="عنوان")
     slug = models.SlugField(max_length=400, unique=True, db_index=True, verbose_name="عنوان در url", allow_unicode=True)
@@ -29,6 +28,7 @@ class Article(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="فعال")
     selected_categories = models.ManyToManyField(ArticleCategory, verbose_name="دسته بندی ها")
     author = models.ForeignKey(User, verbose_name="نویسنده", on_delete=models.CASCADE, null=True, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False, verbose_name="تاریخ ثبت")
 
     class Meta:
         verbose_name = "مقاله"
@@ -37,3 +37,8 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+    def get_jalali_date(self):
+        return date2jalali(self.created_at)
+
+    def get_time(self):
+        return self.created_at.strftime('%H:%M')
