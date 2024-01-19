@@ -22,5 +22,15 @@ class ArticleAdmin(admin.ModelAdmin):
         return super().save_model(request, obj, form, change)
 
 
+class ArticleCommentAdmin(admin.ModelAdmin):
+    list_display = ['createDate', 'user', 'is_active']
+    list_editable = ['is_active']
+
+    def save_model(self, request: HttpRequest, obj: Article, form, change):
+        obj.author = request.user
+        return super().save_model(request, obj, form, change)
+
+
 admin.site.register(models.ArticleCategory, ArticleCategoryAdmin)
 admin.site.register(models.Article, ArticleAdmin)
+admin.site.register(models.ArticleComment, ArticleCommentAdmin)

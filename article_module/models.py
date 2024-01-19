@@ -42,3 +42,19 @@ class Article(models.Model):
 
     def get_time(self):
         return self.created_at.strftime('%H:%M')
+
+
+class ArticleComment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='مقاله')
+    parent = models.ForeignKey('ArticleComment',on_delete=models.CASCADE, verbose_name='والد', null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,verbose_name='کاربر')
+    createDate = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ثبت')
+    text = models.TextField(verbose_name='متن نظر')
+    is_active = models.BooleanField(verbose_name='تایید شده', default=False)
+
+    class Meta:
+        verbose_name = 'نظر'
+        verbose_name_plural = 'نظرات'
+
+    def __str__(self):
+        return self.user.get_full_name()

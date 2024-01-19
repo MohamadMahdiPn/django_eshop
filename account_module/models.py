@@ -6,8 +6,10 @@ from django.db import models
 
 class User(AbstractUser):
     mobile = models.CharField(max_length=11,unique=True, null=True, blank=True)
-    email_active_code = models.CharField(max_length=11, unique=True,verbose_name='کد فعال سازی')
+    email_active_code = models.CharField(max_length=11, unique=True, verbose_name='کد فعال سازی')
     avatar = models.ImageField(upload_to='avatars', null=True, blank=True)
+    about_user = models.TextField(null=True, blank=True, verbose_name='درباره شخص')
+
     class Meta:
         verbose_name = 'کاربر'
         verbose_name_plural = 'کاربران'
