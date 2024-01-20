@@ -48,3 +48,12 @@ def ArticleCategories_Component(request: HttpRequest):
         'main_categories': article_main_categories
     }
     return render(request, 'article_module/components/article_categories_component.html', context)
+
+
+def AddArticleComment(request: HttpRequest):
+    if request.user.is_authenticated:
+        articleId = request.POST.get('articleId')
+        articleComment = request.POST.get('articleComment')
+
+        article_comment = ArticleComment.objects.create()
+    return httpRe
