@@ -92,7 +92,7 @@
                                         <li><i class="fa fa-calendar"></i> {{ comment.createDate|showJalaliDate }}</li>
                                     </ul>
                                     <p>{{ comment.text }}</p>
-                                    <a class="btn btn-primary" href=""><i class="fa fa-reply"></i>پاسـخ</a>
+                                    <a class="btn btn-primary" onclick="fillParentId({{ comment.id }})"><i class="fa fa-reply"></i>پاسـخ</a>
                                 </div>
                             </li>
                                 {% for sub_comment in comment.articlecomment_set.all %}
@@ -107,7 +107,7 @@
                                             <li><i class="fa fa-calendar"></i> {{ sub_comment.createDate|showJalaliDate }}</li>
                                         </ul>
                                             <p>{{ sub_comment.text }}</p>
-                                            <a class="btn btn-primary" href=""><i class="fa fa-reply"></i>پاسـخ</a>
+{#                                            <a class="btn btn-primary" href=""><i class="fa fa-reply"></i>پاسـخ</a>#}
                                         </div>
                                     </li>
                                 {% endfor %}
@@ -120,8 +120,9 @@
                         {% if request.user.is_authenticated %}
                         	  <div class="row">
 
-                            <div class="col-sm-12">
+                            <div class="col-sm-12" id="comment_form">
                                 <div class="text-area">
+                                    <input type="hidden" value="" id="parentId">
                                     <div class="blank-arrow">
                                         <label>متن پیام</label>
                                     </div>

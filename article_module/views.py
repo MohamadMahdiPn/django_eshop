@@ -1,4 +1,4 @@
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import DetailView
@@ -37,7 +37,7 @@ class ArticleDetailView(DetailView):
         article: Article = kwargs.get('object')
         context['comments'] = ArticleComment.objects.filter(is_active=True,
                                                             article_id=article.id,
-                                                            parent=None).prefetch_related('articlecomment_set')
+                                                            parent=None).prefetch_related('articlecomment_set').order_by('-createDate')
         return context
 
 
@@ -50,10 +50,11 @@ def ArticleCategories_Component(request: HttpRequest):
     return render(request, 'article_module/components/article_categories_component.html', context)
 
 
-def AddArticleComment(request: HttpRequest):
+def add_article_comment(request: HttpRequest):
     if request.user.is_authenticated:
-        articleId = request.POST.get('articleId')
-        articleComment = request.POST.get('articleComment')
-
-        article_comment = ArticleComment.objects.create()
-    return httpRe
+        articleId = request.GET.get('articleId')
+        articleComment = request.GET.get('articleComment')
+        parentId = request.GET.get('parentId')
+        new_article_comment = ArticleComment(article_id=articleId, text=articleComment, user_id=request.user.id,parent_id=parentId)
+        new_article_comment.save()
+    return HttpResponse('response')

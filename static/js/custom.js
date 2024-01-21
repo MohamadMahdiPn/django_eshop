@@ -1,11 +1,19 @@
 function sendArticleComment(articleId){
     var comment = $('#commentText').val();
-
-    $.get('articles/add-article-comment',{
+    var parentId = $('#parentId').val();
+    console.log(articleId)
+    console.log(comment)
+    $.get('/articles/add-article-comment',{
         articleComment: comment,
         articleId:articleId,
-        parentId: null
+        parentId: parentId
     }).then(res=>{
-
+        console.log(res);
+        location.reload();
     })
+}
+
+function fillParentId(parentId) {
+    $('#parentId').val(parentId);
+    document.getElementById('comment_form').scrollIntoView({behavior: "smooth"});
 }
