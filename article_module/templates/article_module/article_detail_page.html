@@ -77,11 +77,11 @@
                     {% endif %}
 
 
-                    <div class="response-area">
-                        <h2> نظرات ({{ comments.count }})</h2>
+                    <div class="response-area" id="commentsArea">
+                        <h2> نظرات ({{ comments_count }})</h2>
                         <ul class="media-list">
                             {% for comment in comments %}
-                                <li class="media ">
+                                <li class="media id="singleCommentBox_{{ comment.id }}"">
                                 <a class="pull-right" href="#">
                                     <img class="media-object" src="/static/images/blog/Customer.jpg" alt="">
                                 </a>
@@ -96,7 +96,7 @@
                                 </div>
                             </li>
                                 {% for sub_comment in comment.articlecomment_set.all %}
-                                    <li class="media  second-media">
+                                    <li class="media  second-media" id="singleCommentBox_{{ comment.id }}">
                                         <a class="pull-right" href="#">
                                             <img class="media-object" src="/static/images/blog/Customer.jpg" alt="">
                                         </a>

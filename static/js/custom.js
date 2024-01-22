@@ -9,7 +9,16 @@ function sendArticleComment(articleId){
         parentId: parentId
     }).then(res=>{
         console.log(res);
-        location.reload();
+        $('#commentsArea').html(res)
+        $('#commentText').val('');
+        $('#parentId').val('');
+
+        if (parentId !== null && parentId !==''){
+             document.getElementById('singleCommentBox_'+parentId).scrollIntoView({behavior: "smooth"});
+        }
+        else{
+            document.getElementById('commentsArea').scrollIntoView({behavior: "smooth"});
+        }
     })
 }
 
