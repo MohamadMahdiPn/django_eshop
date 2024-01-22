@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'site_module',
     'article_module',
     'polls',
+    'user_panel_module',
     # externals
     'django_render_partial',
     'sorl.thumbnail',
