@@ -1,9 +1,9 @@
-from django.db.models import Count
+from django.db.models import Count, Max
 from django.http import HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
-from .models import Product as prModel, ProductCategory, ProductBrand
+from .models import Product as prModel, ProductCategory, ProductBrand, Product
 
 
 # Create your views here.
@@ -21,11 +21,30 @@ class ProductListView(ListView):
     ordering = ['-price']
     paginate_by = 5
 
+    def get_context_data(self, **kwargs):
+        context = super(ProductListView, self).get_context_data(**kwargs)
+        query = Product.objects.all()
+        product = query.order_by('-price').first()
+        db_max_price = product.price if product is not None else 0
+        context['db_max_price'] = db_max_price
+        context['start_price'] = self.request.GET.get('start_price') or 0
+        context['end_price'] = self.request.GET.get('start_price') or 10000000
+        return context
+
     def get_queryset(self):
         baseQuery = super(ProductListView, self).get_queryset()
         category_name = self.kwargs.get('cat')
         brand_name = self.kwargs.get('brand')
         data = baseQuery.filter(isActive=True)
+
+        request: HttpRequest = self.request
+        start_price = request.GET.get('start')
+        end_price = request.GET.get('end')
+        if start_price is not None:
+            data = data.filter(price__gte=start_price)
+        if end_price is not None:
+            data = data.filter(price__lte=end_price)
+
         if category_name is not None:
             data = data.filter(Category__url_title__iexact=category_name)
         if brand_name is not None:
