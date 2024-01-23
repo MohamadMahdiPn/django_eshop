@@ -144,6 +144,7 @@ class ResetPasswordView(View):
             'User_active_code': user.email_active_code
         })
 
+
 class LogoutView(View):
     def get(self, request: HttpRequest):
         logout(request)

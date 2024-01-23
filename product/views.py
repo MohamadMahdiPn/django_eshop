@@ -1,11 +1,8 @@
+from django.http import HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic.base import TemplateView, View
 from django.views.generic import ListView, DetailView
-
-from .models import Product as prModel
-from .models import ProductCategory as prCategory
-from django.http import Http404
-from django.db.models import Avg, Min, Max
+from django.views.generic.base import View
+from .models import Product as prModel, ProductCategory, ProductBrand
 
 
 # Create your views here.
@@ -24,8 +21,11 @@ class ProductListView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        baseQuery = super().get_queryset()
+        baseQuery = super(ProductListView, self).get_queryset()
+        category_name = self.kwargs.get('cat')
         data = baseQuery.filter(isActive=True)
+        if category_name is not None:
+            data = data.filter(Category__url_title__iexact=category_name)
         return data
 
 
@@ -80,3 +80,14 @@ class AddProductFavorite(View):
         product = prModel.objects.get(id=product_id)
         request.session['productID'] = product_id
         return redirect(product.get_absolute_url())
+
+
+def product_categories_component(request: HttpRequest):
+    product_category = ProductCategory.objects.filter(is_Active=True, is_delete=False)
+    return render(request, 'product/components/product_categories_component.html', {
+        'categories': product_category
+    })
+
+
+def product_brands_component(request: HttpRequest):
+    product_brand = ProductBrand.objects.filter(isActive=True)
