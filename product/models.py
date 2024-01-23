@@ -33,7 +33,8 @@ class ProductCategory(models.Model):
 #        verbose_name_plural = 'اطلاعات کالا ها'
 
 class ProductBrand(models.Model):
-    title = models.CharField(max_length=300 , verbose_name='نام برند' , db_index=True )
+    title = models.CharField(max_length=300, verbose_name='نام برند', db_index=True)
+    url_title = models.CharField(max_length=300, db_index=True, verbose_name='عنوان در url')
     isActive = models.BooleanField(default=False, verbose_name='فعال /غیر فعال')
 
     class Meta:

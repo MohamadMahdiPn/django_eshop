@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.http import HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
@@ -23,9 +24,12 @@ class ProductListView(ListView):
     def get_queryset(self):
         baseQuery = super(ProductListView, self).get_queryset()
         category_name = self.kwargs.get('cat')
+        brand_name = self.kwargs.get('brand')
         data = baseQuery.filter(isActive=True)
         if category_name is not None:
             data = data.filter(Category__url_title__iexact=category_name)
+        if brand_name is not None:
+            data = data.filter(brand__url_title__iexact=brand_name)
         return data
 
 
@@ -90,4 +94,8 @@ def product_categories_component(request: HttpRequest):
 
 
 def product_brands_component(request: HttpRequest):
-    product_brand = ProductBrand.objects.filter(isActive=True)
+    product_brand = ProductBrand.objects.annotate(product_count=Count('product')).filter(isActive=True)
+    context = {
+        'brands': product_brand
+    }
+    return render(request, 'product/components/product_brands_component.html', context)
