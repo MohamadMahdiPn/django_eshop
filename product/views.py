@@ -3,10 +3,14 @@ from django.http import HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
+from Utils.Convertors import group_list
+from site_module.models import SiteBanner
 from .models import Product as prModel, ProductCategory, ProductBrand, Product
 
 
 # Create your views here.
+
+
 class ProductListView(ListView):
     template_name = 'product/productList.html'
 
@@ -29,6 +33,15 @@ class ProductListView(ListView):
         context['db_max_price'] = db_max_price
         context['start_price'] = self.request.GET.get('start_price') or 0
         context['end_price'] = self.request.GET.get('start_price') or 10000000
+        context['banners'] = SiteBanner.objects.filter(isActive=True,
+                                                       position__iexact=SiteBanner.SiteBannerPosition.productList)
+
+        nyList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+        grouped_list = []
+        group_size = 4
+        my_range = range(0, len(nyList), group_size)
+        for i in my_range:
+            grouped_list.append(nyList[i:i+group_size])
         return context
 
     def get_queryset(self):

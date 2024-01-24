@@ -68,9 +68,16 @@
 
                         </div>
 
-                        <div class="shipping text-center"><!--shipping-->
-                            <img src="/static/images/home/shipping.jpg" alt="">
-                        </div><!--/shipping-->
+                        {% for banner in banners %}
+                        	<div class="shipping text-center"><!--shipping-->
+                                <a href="{{ banner.url }}">
+                                    <img src="{{banner.image.url}}" alt="">
+                                </a>
+
+                            </div><!--/shipping-->
+                        {% endfor %}
+
+
 
                     </div>
                 </div>
