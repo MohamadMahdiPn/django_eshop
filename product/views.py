@@ -5,9 +5,9 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from Utils.Convertors import group_list
 from site_module.models import SiteBanner
-from .models import Product as prModel, ProductCategory, ProductBrand, Product
-
-
+from .models import Product as prModel, ProductCategory, ProductBrand, Product, ProductVisit
+from Utils.HttpService import get_client_ip
+   
 # Create your views here.
 
 
@@ -69,13 +69,19 @@ class ProductDetailsView(DetailView):
     template_name = 'product/ProductDetail.html'
     model = prModel
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     slug = kwargs['slug']
-    #     productItem = get_object_or_404(prModel, slug=slug)
-    #     context['product'] = productItem
-    #
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        loaded_product = self.object
+        user_ip = get_client_ip(request=self.request)
+        user_id = None
+        if self.request.user.is_authenticated:
+            user_id = self.request.user.id
+
+        has_been_visited = ProductVisit.objects.filter(ipaddress__iexact=user_ip, product_id__exact=loaded_product.id).exists()
+        if not has_been_visited:
+            new_visit = ProductVisit(ipaddress=user_ip, user_id=user_id, product_id=loaded_product.id)
+            new_visit.save()
+        return context
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
