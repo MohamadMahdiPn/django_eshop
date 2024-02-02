@@ -1,5 +1,5 @@
 {% load thumbnail %}
-
+{% load poll_extras %}
 <div class="col-sm-4">
     <div class="product-image-wrapper">
         <div class="single-products">
@@ -15,14 +15,14 @@
 
                  {% endif %}
 
-                <h2>{{ product.price }} تومان</h2>
+                <h2>{{ product.price |threeDigitsCurrency }} تومان</h2>
                 <p>{{ product.title }}</p>
                 <a href="#" class="btn btn-default add-to-cart"><i
                         class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
             </div>
             <div class="product-overlay">
                 <div class="overlay-content">
-                    <h2>{{ product.price }} تومان</h2>
+                    <h2>{{ product.price |threeDigitsCurrency }} تومان</h2>
                     <p>{{ product.title }}</p>
                     <a href="#" class="btn btn-default add-to-cart"><i
                             class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>

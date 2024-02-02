@@ -1,6 +1,6 @@
 {% extends 'shared/_layout.html' %}
 {% load thumbnail %}
-
+{% load poll_extras %}
 {% block content %}
     <p>{{ data }}</p>
 <section id="slider"><!--slider-->
@@ -62,7 +62,7 @@
                                                     <img src="{{ im.url }}" alt="image">
                                                 {% endthumbnail %}
 
-                                                <h2>{{product.price }}</h2>
+                                                <h2>{{product.price |threeDigitsCurrency }}</h2>
                                                 <p>{{ product.title}}</p>
                                                 <a href="#" class="btn btn-default add-to-cart"><i
                                                     class="fa fa-shopping-cart"></i>افزودن به سبـد خرید</a>
@@ -97,14 +97,14 @@
                                                     <div class="productinfo text-center">
                                                          {% thumbnail product.image '268x250' quality=90 crop='center' as im %}
                                                             <img src="{{ im.url }}" alt="image">
-                                                        {% endthumbnail %}
-                                                        <h2>{{product.price }}</h2>
+                                                         {% endthumbnail %}
+                                                        <h2>{{product.price  |threeDigitsCurrency}}</h2>
                                                         <p>{{ product.title}}</p>
                                                         <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
                                                     </div>
                                                     <div class="product-overlay">
                                                         <div class="overlay-content">
-                                                            <h2>{{product.price }}</h2>
+                                                            <h2>{{product.price  |threeDigitsCurrency }}</h2>
                                                             <p>{{ product.title}}</p>
                                                             <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
                                                         </div>
@@ -407,21 +407,24 @@
                 <div class="category-tab"><!--category-tab-->
                     <div class="col-sm-12">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#Tab_001" data-toggle="tab">گـروه محصولات 1</a></li>
-                            <li><a href="#Tab_002" data-toggle="tab">گـروه محصولات 2</a></li>
-                            <li><a href="#Tab_003" data-toggle="tab">گـروه محصولات 3</a></li>
-                            <li><a href="#Tab_004" data-toggle="tab">گـروه محصولات 4</a></li>
-                            <li><a href="#Tab_005" data-toggle="tab">گـروه محصولات 5</a></li>
+                            {% for categories_Product in categories_Products %}
+                                  <li class="{% if forloop.first %} active {% endif %}"><a href="#Tab_{{ categories_Product.id }}" data-toggle="tab">{{ categories_Product.title }}</a></li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="tab-content">
-                        <div class="tab-pane fade active in" id="Tab_001">
-                            <div class="col-sm-3">
+                        {% for categories_Product in categories_Products %}
+                            <div class="tab-pane fade {% if forloop.first %} active in {% endif %}" id="Tab_{{ categories_Product.id }}">
+                          {% for product in categories_Product.products %}
+                              <div class="col-sm-3">
                                 <div class="product-image-wrapper">
                                     <div class="single-products">
                                         <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
+                                            {% thumbnail product.image '268x250' quality=90 crop='center' as im %}
+                                                <img src="{{ im.url }}" alt="image">
+                                            {% endthumbnail %}
+
+                                            <h2>{{ product.price | threeDigitsCurrency }}</h2>
                                             <p>توضیحات کوتاه محصول</p>
                                             <a href="#" class="btn btn-default add-to-cart"><i
                                                     class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
@@ -430,285 +433,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
+                          {% endfor %}
                         </div>
-
-                        <div class="tab-pane fade" id="Tab_002">
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="Tab_003">
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="Tab_004">
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="Tab_005">
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="/static/images/home/Tabs.png" alt=""/>
-                                            <h2>560.000 ريال</h2>
-                                            <p>توضیحات کوتاه محصول</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i
-                                                    class="fa fa-shopping-cart"></i>افزودن به سبـد خریـد</a>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div><!--/category-tab-->
 
