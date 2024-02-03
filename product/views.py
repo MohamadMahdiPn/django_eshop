@@ -72,9 +72,13 @@ class ProductDetailsView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         loaded_product = self.object
-        galleries = list(ProductGallery.objects.filter(product_id=loaded_product.id,isActive=True).all())
+
+        galleries = list(ProductGallery.objects.filter(product_id=loaded_product.id, isActive=True).all())
         galleries.insert(0, loaded_product)
         context['product_galleries_group'] = group_list(galleries, 3)
+
+        related_products = list(Product.objects.filter(brand_id=loaded_product.brand_id).exclude(pk=loaded_product.id).all()[:12])
+        context['related_products_group'] = group_list(related_products, 3)
 
         user_ip = get_client_ip(request=self.request)
         user_id = None
