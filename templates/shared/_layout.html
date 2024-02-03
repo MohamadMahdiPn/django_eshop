@@ -13,7 +13,8 @@
         {% endblock %}
     </title>
 
-   {% include 'shared/header_refrences.html' %}
+    {% include 'shared/header_refrences.html' %}
+    {% block header_references %}{% endblock %}
 </head>
 
 <body>
@@ -28,5 +29,6 @@
 
 
 {% include 'shared/footer_refrences.html' %}
+{% block footer_references %}{% endblock %}
 </body>
 </html>

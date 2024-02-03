@@ -41,3 +41,9 @@ function fillPage(page) {
     $('#page').val(page);
     $('#filter_form').submit();
 }
+
+
+function showLargeImage(imgSrc){
+    $('#show_large_image_modal').attr('href', imgSrc);
+    $("#main_image").attr('src', imgSrc)
+}

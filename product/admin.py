@@ -24,6 +24,8 @@ class ProductAdmin(admin.ModelAdmin):
 # class ProductVisitAdmin(admin.ModelAdmin):
 #     list_display = []
 
+# class ProductGalleryAdmin(admin.ModelAdmin):
+#     list_display = ['isActive']
 
 
 admin.site.register(models.Product, ProductAdmin)
@@ -32,3 +34,4 @@ admin.site.register(models.ProductCategory, ProductCategoryAdmin)
 admin.site.register(models.ProductTag, ProductTagAdmin)
 admin.site.register(models.ProductBrand, ProductBrandAdmin)
 admin.site.register(models.ProductVisit)
+admin.site.register(models.ProductGallery)

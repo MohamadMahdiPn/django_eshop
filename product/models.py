@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from account_module.models import User
 
+
 # Create your models here.
 
 
@@ -55,7 +56,7 @@ class Product(models.Model):
     isActive = models.BooleanField(default=False, verbose_name='فعال /غیر فعال')
     slug = models.SlugField(default="", null=False, db_index=True, blank=True)
     Category = models.ManyToManyField(ProductCategory, related_name='Categoties', verbose_name='دسته بندی ها')
-    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE , verbose_name= 'برند', null=True , blank=True)
+    brand = models.ForeignKey(ProductBrand, on_delete=models.CASCADE, verbose_name='برند', null=True, blank=True)
 
     # product_information = models.OneToOneField(ProductInformation, on_delete=models.CASCADE,
     #                                           related_name='Product_info', verbose_name='additional Info', null=True)
@@ -80,7 +81,7 @@ class Product(models.Model):
 
 
 class ProductTag(models.Model):
-    caption = models.CharField(max_length=300,db_index=True, verbose_name='عنوان')
+    caption = models.CharField(max_length=300, db_index=True, verbose_name='عنوان')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ProductTags')
 
     class Meta:
@@ -102,3 +103,16 @@ class ProductVisit(models.Model):
     class Meta:
         verbose_name = 'بازدید محصول'
         verbose_name_plural = 'بازدید های محصول'
+
+
+class ProductGallery(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="محصول", related_name='products')
+    image = models.ImageField(upload_to="productGallery", verbose_name="تصویر")
+    isActive = models.BooleanField(default=False, verbose_name='فعال /غیر فعال')
+
+    def __str__(self):
+        return self.product.title
+
+    class Meta:
+        verbose_name = "تصویر"
+        verbose_name_plural = 'تصاویر'
