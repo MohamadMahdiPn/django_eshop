@@ -82,15 +82,15 @@
 										<span>قیمت : {{ product.price | threeDigitsCurrency}} </span>
 									</span>
                                     <span>
-										<form action="{% url 'productFavorite' %}" method="post">
+
                                             {% csrf_token %}
                                             <label>تعداد :</label>
-										    <input name="productID" type="hidden" value="{{ product.id }}" >
-										    <button type="submit" class="btn btn-fefault cart">
+										    <input id="product-count" type="number" min="1" value="1" >
+										    <button type="submit" class="btn btn-fefault cart" onclick="addToCart({{ product.id }})">
 											    <i class="fa fa-shopping-cart"></i>
 											افـزودن به سبـد خریـد+  
 										    </button>
-                                        </form>
+
 									</span>
                                 </div>
                                 <div>

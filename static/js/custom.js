@@ -27,7 +27,6 @@ function fillParentId(parentId) {
     document.getElementById('comment_form').scrollIntoView({behavior: "smooth"});
 }
 
-
 function filterProducts() {
     const filterPrice = $('#sl2').val();
     const start_price = filterPrice.split(',')[0];
@@ -42,8 +41,14 @@ function fillPage(page) {
     $('#filter_form').submit();
 }
 
-
 function showLargeImage(imgSrc){
     $('#show_large_image_modal').attr('href', imgSrc);
     $("#main_image").attr('src', imgSrc)
+}
+
+function addToCart(productId){
+   const productCount = $('#product-count').val();
+    $.get('/order/add_to_cart?product_id='+productId+'&quantity='+productCount).then(res=>{
+        alert(res)
+    })
 }

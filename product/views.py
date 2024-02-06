@@ -112,6 +112,14 @@ class ProductDetailsView(DetailView):
 #     })
 
 
+class AddProductFavorite(View):
+    def post(self, request):
+        product_id = request.POST['productID']
+        product = prModel.objects.get(id=product_id)
+        request.session['productID'] = product_id
+        return redirect(product.get_absolute_url())
+
+
 def productDetail(request, slug):
     # try:
     #    productItem = prModel.objects.get(id=productId)
@@ -123,14 +131,6 @@ def productDetail(request, slug):
     return render(request, 'product/ProductDetail.html', {
         'product': productItem
     })
-
-
-class AddProductFavorite(View):
-    def post(self, request):
-        product_id = request.POST['productID']
-        product = prModel.objects.get(id=product_id)
-        request.session['productID'] = product_id
-        return redirect(product.get_absolute_url())
 
 
 def product_categories_component(request: HttpRequest):
