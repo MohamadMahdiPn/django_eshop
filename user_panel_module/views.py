@@ -5,8 +5,8 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import TemplateView
-
-from order_module.models import Order
+from django.utils.decorators import method_decorator
+from order_module.models import Order, OrderItem
 from .forms import EditProfileModelForm, ChangePasswordForm
 from account_module.models import User
 from django.urls import reverse
@@ -14,10 +14,12 @@ from django.shortcuts import render, redirect
 # Create your models here.
 
 
+@method_decorator(login_required, name='dispatch')
 class UserPanelDashboardPage(TemplateView):
     template_name = 'user_panel_module/user_panel_dashboard_page.html'
 
 
+@method_decorator(login_required, name='dispatch')
 class ChangePasswordPage(View):
     def get(self, request: HttpRequest):
 
@@ -41,6 +43,7 @@ class ChangePasswordPage(View):
         })
 
 
+@method_decorator(login_required, name='dispatch')
 class EditUserProfile(View):
     def get(self, request: HttpRequest):
         # edit_form = EditProfileModelForm(initial={
@@ -68,27 +71,72 @@ class EditUserProfile(View):
         return render(request, 'user_panel_module/edit_profile_page.html', context)
 
 
+@login_required
 def remove_order_detail(request):
-    current_order, created = Order.objects.prefetch_related('orders').get_or_create(isPaid=False,user_id=request.user.id)
+
     detail_id = request.GET.get('detail_id')
-    detail = current_order.orders.filter(id=detail_id).first()
-    if detail is None:
+    if detail_id is None:
+        return JsonResponse({
+            'status': 'not_found_detail_id'
+        })
+    deleted_count, deleted_dict = OrderItem.objects.filter(id=detail_id, order__isPaid=False, order__user_id=request.user.id).delete()
+    if deleted_count == 0:
         return JsonResponse({
             'status': 'not_found_detail'
         })
-    detail.delete()
-
-    total_amount = 0
-    for order_detail in current_order.orders.all().exclude(id=detail_id):
-        total_amount += order_detail.product.price * order_detail.quantity
+    current_order, created = Order.objects.prefetch_related('orders').get_or_create(isPaid=False,
+                                                                                    user_id=request.user.id)
+    total_amount = current_order.calculateTotalPrice()
     context = {
             "order": current_order,
             'sum': total_amount
         }
-    data = render_to_string('user_panel_module/user_basket_content.html', context)
+
     return JsonResponse({
         'status': 'success',
-        'body': data
+        'body': render_to_string('user_panel_module/user_basket_content.html', context)
+    })
+
+
+@login_required
+def change_order_detail(request):
+    detail_id = request.GET.get('detail_id')
+    state = request.GET.get('state')
+    if detail_id is None or state is None:
+        return JsonResponse({
+            'status': 'not_found_detail_id'
+        })
+
+    orderDetail = OrderItem.objects.filter(id=detail_id, order__user_id=request.user.id, order__isPaid=False).first()
+    if orderDetail is None:
+        return JsonResponse({
+            'status': 'not_found'
+        })
+
+    if state == 'increase':
+        orderDetail.quantity += 1
+        orderDetail.save()
+    elif state == 'decrease':
+        if orderDetail.quantity ==1:
+            orderDetail.delete()
+        else:
+            orderDetail.quantity -= 1
+            orderDetail.save()
+    else:
+        return JsonResponse({
+            'status': 'error'
+        })
+    current_order, created = Order.objects.prefetch_related('orders').get_or_create(isPaid=False,
+                                                                                    user_id=request.user.id)
+    total_amount = current_order.calculateTotalPrice()
+    context = {
+        "order": current_order,
+        'sum': total_amount
+    }
+
+    return JsonResponse({
+        'status': 'success',
+        'body': render_to_string('user_panel_module/user_basket_content.html', context)
     })
 
 

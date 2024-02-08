@@ -13,6 +13,16 @@ class Order(models.Model):
         verbose_name = "سبد خرید"
         verbose_name_plural = "سبد های خرید"
 
+    def calculateTotalPrice(self):
+        total_amount = 0
+
+        for orderItem in self.orders.all():
+            if self.isPaid:
+                total_amount += orderItem.final_price * orderItem.quantity
+            else:
+                total_amount += orderItem.product.price * orderItem.quantity
+        return total_amount
+
     def __str__(self):
         return str(self.user)
 

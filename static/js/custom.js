@@ -71,3 +71,11 @@ function removeOrderDetail(orderId){
         }
     })
 }
+
+function changeOrderDetailCount(detailId, state){
+     $.get('/user/change-order?detail_id='+ detailId +'&state='+state).then(res=>{
+        if (res.status ==='success'){
+            $('#order-detail-content').html(res.body);
+        }
+    })
+}

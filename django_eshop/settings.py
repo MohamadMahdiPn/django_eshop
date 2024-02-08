@@ -89,6 +89,7 @@ WSGI_APPLICATION = 'django_eshop.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 AUTH_USER_MODEL = 'account_module.User'
+LOGIN_URL = 'login_page'
 
 DATABASES = {
     'default': {

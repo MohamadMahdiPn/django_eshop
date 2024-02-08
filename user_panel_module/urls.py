@@ -8,4 +8,5 @@ urlpatterns = [
     path('change-Password', views.ChangePasswordPage.as_view(),name='change_password_page'),
     path('user-basket', views.user_basket,name='user_basket_page'),
     path('remove-order', views.remove_order_detail, name='remove-order'),
+    path('change-order', views.change_order_detail, name='change-order'),
 ]
