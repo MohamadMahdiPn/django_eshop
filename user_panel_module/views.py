@@ -1,8 +1,11 @@
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import TemplateView
+
+from order_module.models import Order
 from .forms import EditProfileModelForm, ChangePasswordForm
 from account_module.models import User
 from django.urls import reverse
@@ -64,5 +67,18 @@ class EditUserProfile(View):
         return render(request, 'user_panel_module/edit_profile_page.html', context)
 
 
+def user_basket(request: HttpRequest):
+    user_open_order, created = Order.objects.prefetch_related('orders').get_or_create(isPaid=False, user_id=request.user.id)
+    total_amount=0
+    for order_detail in user_open_order.orders.all():
+        total_amount += order_detail.product.price * order_detail.quantity
+    context = {
+        "order": user_open_order,
+        'sum': total_amount
+    }
+    return render(request, 'user_panel_module/user_basket.html',context)
+
+
+@login_required
 def user_panel_menu_component(request: HttpRequest):
     return render(request, 'user_panel_module/components/user_panel_menu_component.html')

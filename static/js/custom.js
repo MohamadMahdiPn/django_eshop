@@ -49,6 +49,17 @@ function showLargeImage(imgSrc){
 function addToCart(productId){
    const productCount = $('#product-count').val();
     $.get('/order/add_to_cart?product_id='+productId+'&quantity='+productCount).then(res=>{
-        alert(res)
+       Swal.fire({
+            title: 'اعلان',
+            text: res.text,
+            icon: res.icon,
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: res.confirm_button_text
+        }).then((result) => {
+            if (result.isConfirmed && res.status === 'Not_authenticated') {
+                window.location.href = '/login';
+            }
+        })
     })
 }
