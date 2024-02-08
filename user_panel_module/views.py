@@ -1,7 +1,8 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import TemplateView
 
@@ -67,9 +68,34 @@ class EditUserProfile(View):
         return render(request, 'user_panel_module/edit_profile_page.html', context)
 
 
+def remove_order_detail(request):
+    current_order, created = Order.objects.prefetch_related('orders').get_or_create(isPaid=False,user_id=request.user.id)
+    detail_id = request.GET.get('detail_id')
+    detail = current_order.orders.filter(id=detail_id).first()
+    if detail is None:
+        return JsonResponse({
+            'status': 'not_found_detail'
+        })
+    detail.delete()
+
+    total_amount = 0
+    for order_detail in current_order.orders.all().exclude(id=detail_id):
+        total_amount += order_detail.product.price * order_detail.quantity
+    context = {
+            "order": current_order,
+            'sum': total_amount
+        }
+    data = render_to_string('user_panel_module/user_basket_content.html', context)
+    return JsonResponse({
+        'status': 'success',
+        'body': data
+    })
+
+
+@login_required
 def user_basket(request: HttpRequest):
     user_open_order, created = Order.objects.prefetch_related('orders').get_or_create(isPaid=False, user_id=request.user.id)
-    total_amount=0
+    total_amount = 0
     for order_detail in user_open_order.orders.all():
         total_amount += order_detail.product.price * order_detail.quantity
     context = {

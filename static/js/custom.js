@@ -63,3 +63,11 @@ function addToCart(productId){
         })
     })
 }
+
+function removeOrderDetail(orderId){
+    $.get('/user/remove-order?detail_id='+orderId).then(res=>{
+        if (res.status ==='success'){
+            $('#order-detail-content').html(res.body);
+        }
+    })
+}
