@@ -1,10 +1,10 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
+from django.http import HttpRequest, HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView,ListView
 from django.utils.decorators import method_decorator
 from order_module.models import Order, OrderItem
 from .forms import EditProfileModelForm, ChangePasswordForm
@@ -69,6 +69,19 @@ class EditUserProfile(View):
             'form': edit_form
         }
         return render(request, 'user_panel_module/edit_profile_page.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+class myShoppings(ListView):
+    model = Order
+    template_name = 'user_panel_module/user_shopping.html'
+    paginate_by = 2
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        request: HttpRequest = self.request
+        queryset = queryset.filter(user_id=request.user.id,isPaid=True)
+        return queryset
 
 
 @login_required
@@ -156,3 +169,13 @@ def user_basket(request: HttpRequest):
 @login_required
 def user_panel_menu_component(request: HttpRequest):
     return render(request, 'user_panel_module/components/user_panel_menu_component.html')
+
+
+def my_Shopping_Details(request: HttpRequest,order_id):
+    order = Order.objects.filter(id=order_id, user_id=request.user.id).first()
+    if order is None:
+        raise Http404('سبد یافت نشد')
+
+    return render(request, 'user_panel_module/user_shopping_detail.html',{
+        'order': order
+    })
